@@ -1,0 +1,56 @@
+import enc
+import key
+
+
+print("Choose a, b or c...")
+print("a) encryption")
+print("b) decryption")
+print("c) encryption + decryption ")
+choice = input("Your choice: ")
+message = input("Your message: ")
+
+new_matrix = enc.edit(message)
+n_o_m = enc.number_of_matrixes(message)
+key, nr = key.expand_k()
+
+
+
+def encryption():
+
+    """ This function encrypts the message """
+
+    output_message = ""
+    for n_m in range(n_o_m):
+        a_r_k = enc.add_round_key(new_matrix[n_m], key[:4])
+        for cycle in range(nr - 1):
+            su_b = enc.sub_bytes(a_r_k)
+            sh_r = enc.shift_rows(su_b)
+            mix_c = enc.mix_columns(sh_r)
+            a_r_k = enc.add_next_key(mix_c, key[(cycle + 1) * 4:(cycle + 2) * 4])
+        su_b = enc.sub_bytes(a_r_k)
+        sh_r = enc.shift_rows(su_b)
+        a_r_k = enc.add_next_key(sh_r, key[nr * 4:(nr + 1) * 4])
+        output_message = output_message + enc.deconvert_m(a_r_k)
+    return output_message
+
+
+def decryption():
+
+    """ This function decrypts the message """
+
+    pass
+
+
+def main():
+    if choice == "a":
+        print(encryption())
+    elif choice == "b":
+        print(decryption())
+    elif choice == "c":
+        print(encryption())
+        print(decryption())
+    else:
+        print("Error")
+
+
+main()
