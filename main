@@ -1,4 +1,5 @@
 import enc
+import dec
 import key
 
 
@@ -22,11 +23,11 @@ def encryption():
     output_message = ""
     for n_m in range(n_o_m):
         a_r_k = enc.add_round_key(new_matrix[n_m], key[:4])
-        for cycle in range(nr - 1):
+        for round in range(nr - 1):
             su_b = enc.sub_bytes(a_r_k)
             sh_r = enc.shift_rows(su_b)
             mix_c = enc.mix_columns(sh_r)
-            a_r_k = enc.add_next_key(mix_c, key[(cycle + 1) * 4:(cycle + 2) * 4])
+            a_r_k = enc.add_next_key(mix_c, key[(round + 1) * 4:(round + 2) * 4])
         su_b = enc.sub_bytes(a_r_k)
         sh_r = enc.shift_rows(su_b)
         a_r_k = enc.add_next_key(sh_r, key[nr * 4:(nr + 1) * 4])
@@ -38,7 +39,20 @@ def decryption():
 
     """ This function decrypts the message """
 
-    pass
+    output_message = ""
+    for n_m in range(n_o_m):
+        a_r_k = enc.add_next_key(new_matrix[n_m], key[nr * 4:(nr + 1) * 4])
+        for round in range(nr - 1):
+            sh_r = dec.inv_shift_rows(a_r_k)
+            su_b = dec.inv_sub_bytes(sh_r)
+            a_r_k = enc.add_next_key(su_b, key[(round + 1) * 4:(round + 2) * 4])
+            mix_c = dec.inv_mix_columns(a_r_k)
+
+        sh_r = dec.inv_shift_rows(mix_c)
+        su_b = dec.inv_sub_bytes(sh_r)
+        a_r_k = enc.add_round_key(su_b, key[:4])
+        output_message = output_message + dec.inv_deconvert_m(a_r_k)
+    return output_message
 
 
 def main():
