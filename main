@@ -10,8 +10,7 @@ print("c) encryption + decryption ")
 choice = input("Your choice: ")
 message = input("Your message: ")
 
-new_matrix, n_o_m = enc.edit(message)
-key, nr = key.expand_k()
+
 
 
 
@@ -39,17 +38,22 @@ def decryption():
     """ This function decrypts the message """
 
     output_message = ""
+    if nr == 10:
+        p = 40
+    elif nr == 12:
+        p = 48
+    else:
+        p = 56
     for n_m in range(n_o_m):
-        mix_c = enc.add_next_key(new_matrix[n_m], key[nr * 4:(nr + 1) * 4])
+        mix_c = enc.add_round_key(new_matrix[n_m], key[p:p + 4])
         for round in range(nr - 1):
             sh_r = dec.inv_shift_rows(mix_c)
             su_b = dec.inv_sub_bytes(sh_r)
-            a_r_k = enc.add_next_key(su_b, key[(round + 1) * 4:(round + 2) * 4])
+            a_r_k = enc.add_next_key(su_b, key[p - ((round + 1) * 4):(p + 4) - ((round + 1) * 4)])
             mix_c = dec.inv_mix_columns(a_r_k)
-
         sh_r = dec.inv_shift_rows(mix_c)
         su_b = dec.inv_sub_bytes(sh_r)
-        a_r_k = enc.add_round_key(su_b, key[:4])
+        a_r_k = enc.add_next_key(su_b, key[p - (nr * 4):(p + 4) - (nr * 4)])
         output_message = output_message + dec.inv_deconvert_m(a_r_k)
     return output_message
 
@@ -65,5 +69,14 @@ def main():
     else:
         print("Error")
 
+if choice == "a":
+    new_matrix, n_o_m = enc.edit(message)
+    key, nr = key.expand_k()
+elif choice == "b":
+    new_matrix, n_o_m = enc.edit(message)
+    key, nr = key.expand_k()
+elif choice == "c":
+    new_matrix = encryption()
+    key, nr = key.expand_k()
 
 main()
