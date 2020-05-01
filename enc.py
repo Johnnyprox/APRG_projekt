@@ -54,19 +54,20 @@ def edit(message):
     """ This function edits the matrix (replaces columns with rows) """
 
     matrix = create_matrix(message)
-    n_u_m = number_of_matrixes(message)
+    n_o_m = number_of_matrixes(message)
+    n_o_m_2 = number_of_matrixes(message)
     new_matrix = []
     index = 0
-    while n_u_m > 0:
+    while n_o_m_2 > 0:
 
         new_matrix.append([matrix[index][0], matrix[index][4], matrix[index][8], matrix[index][12],
                             matrix[index][1], matrix[index][5], matrix[index][9], matrix[index][13],
                             matrix[index][2], matrix[index][6], matrix[index][10], matrix[index][14],
                             matrix[index][3], matrix[index][7], matrix[index][11], matrix[index][15]])
-        n_u_m -= 1
+        n_o_m_2 -= 1
         index += 1
 
-    return new_matrix
+    return new_matrix, n_o_m
 
 
 def add_round_key(new_matrix, key):
