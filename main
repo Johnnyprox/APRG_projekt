@@ -10,8 +10,7 @@ print("c) encryption + decryption ")
 choice = input("Your choice: ")
 message = input("Your message: ")
 
-new_matrix = enc.edit(message)
-n_o_m = enc.number_of_matrixes(message)
+new_matrix, n_o_m = enc.edit(message)
 key, nr = key.expand_k()
 
 
