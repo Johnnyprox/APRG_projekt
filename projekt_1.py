@@ -80,8 +80,7 @@ def add_round_key(new_matrix, key):
             mat.append(q)
 
     for i in range(16):
-        k = hex(int(bin(int(new_matrix[i], 16) ^ int(mat[i], 16)), 2)).replace("0x", "")
-        mat_with_key.append(k)
+        mat_with_key.append("{0:02x}".format(int(bin(int(new_matrix[i], 16) ^ int(mat[i], 16)), 2)).replace("0x", ""))
     return mat_with_key
 
 
@@ -108,23 +107,17 @@ def shift_rows(s_matrix):
 
     """ This function shifts rows of matrix """
 
-    s_matrix[1].append(s_matrix[1].pop(0))
-    s_matrix[2].append(s_matrix[2].pop(0))
-    s_matrix[2].append(s_matrix[2].pop(0))
-    s_matrix[3].append(s_matrix[3].pop(0))
-    s_matrix[3].append(s_matrix[3].pop(0))
-    s_matrix[3].append(s_matrix[3].pop(0))
-    return s_matrix
+    sh_matrix = [[s_matrix[0], s_matrix[5], s_matrix[10], s_matrix[15]],
+                 [s_matrix[4], s_matrix[9], s_matrix[14], s_matrix[3]],
+                 [s_matrix[8], s_matrix[13], s_matrix[2], s_matrix[7]],
+                 [s_matrix[12], s_matrix[1], s_matrix[6], s_matrix[11]]]
 
+    return sh_matrix
 
-"""
-MixColumns
-"""
-# Galois Multiplication
 
 def galoisMult(a, b):
 
-    """ This function is  """
+    """ This function is Galois Multiplication """
 
     p = 0
     set = 0
@@ -140,9 +133,9 @@ def galoisMult(a, b):
 
 # mixColumn
 
-def mixColumn(column)
+def mix_column(column)
 
-    """ This function """
+    """ This function mixes columns of the matrix """
 
     temp = copy(column)
     column[0] = galoisMult(temp[0], 2) ^ galoisMult(temp[3], 1) ^ \
@@ -158,7 +151,7 @@ def mixColumn(column)
 
 def mixColumnInv(column):
 
-    """ This function """
+    """ This function mixes columns of the matrix """
 
         temp = copy(column)
         column[0] = galoisMult(temp[0], 14) ^ galoisMult(temp[3], 9) ^ \
@@ -172,9 +165,9 @@ def mixColumnInv(column):
 
 
 
-def mixColumns(s_matrix):
+def mix_columns(s_matrix):
 
-    """ This function """
+    """ This function mixes columns of the matrix """
 
     for i in range(4):
         column = []
@@ -182,9 +175,7 @@ def mixColumns(s_matrix):
         for j in range(4):
             column.append(s_matrix[j*4+i])
 
-
         mixColumn(column)
-
         # transfer the new values back into the state table
         for j in range(4):
             s_matrix[j*4+i] = column[j]
@@ -192,7 +183,7 @@ def mixColumns(s_matrix):
 
 def mixColumnsInv(s_matrix):
 
-    """ This function  """
+    """ This function mixes columns of the matrix """
 
     for i in range(4):
         column = []
@@ -200,34 +191,45 @@ def mixColumnsInv(s_matrix):
         for j in range(4):
             column.append(s_matrix[j*4+i])
 
-
         mixColumnInv(column)
-
-
         for j in range(4):
             s_matrix[j*4+i] = column[j]
 
-mix = [
-[2,3,1,1],
-[1,2,3,1],
-[1,1,2,3],
-[3,1,1,2]]
+            
+def xor_m(x, y):
 
-result = [
-[0,0,0,0],
-[0,0,0,0],
-[0,0,0,0],
-[0,0,0,0]]
+    """ This function does XOR operation """
+
+    xor_m = []
+
+    for p in range(4):
+        for q in range(4):
+            xor_m.append("{0:02x}".format(int(bin(int(x[p][q], 16) ^ int(y[p][q], 16)), 2)).replace("0x", ""))
+    return xor_m
 
 
-for l in range(len(matrix)):
-    for m in range(len(mix[0])):
-       for n in range(len(mix)):
-           result[l][m] += matrix[l][n] * mix[n][m]
+def add_next_key(mix_c, a_key):
 
-for r in result:
-   print(r)
+    """This add round key after mix columns operation."""
 
+    add_rk = xor_m(mix_c, a_key)
+    return add_rk
+
+
+def deconvert_m(m):
+
+    """This transcript the message from hexadecimal"""
+
+    dec_message = ""
+    message = [m[0], m[4], m[8], m[12],
+               m[1], m[5], m[9], m[13],
+               m[2], m[6], m[10], m[14],
+               m[3], m[7], m[11], m[15]]
+
+
+    for p in message:
+        dec_message = dec_message + (chr(int(p, 16)))
+    return dec_message
 
 
 
