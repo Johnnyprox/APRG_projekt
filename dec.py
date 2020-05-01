@@ -39,17 +39,18 @@ def inv_sub_bytes(matrix):
         row = int(converted_matrix[item * 2])
         col = int(converted_matrix[item * 2 + 1])
         s_matrix.append(inv_sbox[row][col])
-    return s_matrix
+    ss_matrix = [s_matrix[:4], s_matrix[4:8], s_matrix[8:12], s_matrix[12:16]]
+    return ss_matrix
 
 
 def inv_shift_rows(s_matrix):
 
     """ This function shifts rows of the matrix """
 
-    sh_matrix = [s_matrix[0][0], s_matrix[3][1], s_matrix[2][2], s_matrix[1][3],
-                 s_matrix[1][0], s_matrix[0][1], s_matrix[3][2], s_matrix[2][3],
-                 s_matrix[2][0], s_matrix[1][1], s_matrix[0][2], s_matrix[3][3],
-                 s_matrix[3][0], s_matrix[2][1], s_matrix[1][2], s_matrix[0][3]]
+    sh_matrix = [s_matrix[0], s_matrix[13], s_matrix[10], s_matrix[7],
+                 s_matrix[4], s_matrix[1], s_matrix[14], s_matrix[11],
+                 s_matrix[8], s_matrix[5], s_matrix[2], s_matrix[15],
+                 s_matrix[12], s_matrix[9], s_matrix[6], s_matrix[3]]
 
     return sh_matrix
 
