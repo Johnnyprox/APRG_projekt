@@ -41,9 +41,9 @@ def decryption():
 
     output_message = ""
     for n_m in range(n_o_m):
-        a_r_k = enc.add_next_key(new_matrix[n_m], key[nr * 4:(nr + 1) * 4])
+        mix_c = enc.add_next_key(new_matrix[n_m], key[nr * 4:(nr + 1) * 4])
         for round in range(nr - 1):
-            sh_r = dec.inv_shift_rows(a_r_k)
+            sh_r = dec.inv_shift_rows(mix_c)
             su_b = dec.inv_sub_bytes(sh_r)
             a_r_k = enc.add_next_key(su_b, key[(round + 1) * 4:(round + 2) * 4])
             mix_c = dec.inv_mix_columns(a_r_k)
