@@ -1,3 +1,4 @@
+from copy import copy
 
 
 def number_of_matrixes(message):
@@ -119,6 +120,92 @@ def shift_rows(s_matrix):
 """
 MixColumns
 """
+# Galois Multiplication
+
+def galoisMult(a, b):
+
+    """ This function is  """
+
+    p = 0
+    set = 0
+    for i in range(8):
+        if b & 1 == 1:
+            p ^= a
+        set = a & 0x80
+        a <<= 1
+        if set == 0x80:
+            a ^= 0x1b
+        b >>= 1
+    return p % 256
+
+# mixColumn
+
+def mixColumn(column)
+
+    """ This function """
+
+    temp = copy(column)
+    column[0] = galoisMult(temp[0], 2) ^ galoisMult(temp[3], 1) ^ \
+                galoisMult(temp[2], 1) ^ galoisMult(temp[1], 3)
+    column[1] = galoisMult(temp[1], 2) ^ galoisMult(temp[0], 1) ^ \
+                galoisMult(temp[3], 1) ^ galoisMult(temp[2], 3)
+    column[2] = galoisMult(temp[2], 2) ^ galoisMult(temp[1], 1) ^ \
+                galoisMult(temp[0], 1) ^ galoisMult(temp[3], 3)
+    column[3] = galoisMult(temp[3], 2) ^ galoisMult(temp[2], 1) ^ \
+                galoisMult(temp[1], 1) ^ galoisMult(temp[0], 3)
+
+# mixColumnInv
+
+def mixColumnInv(column):
+
+    """ This function """
+
+        temp = copy(column)
+        column[0] = galoisMult(temp[0], 14) ^ galoisMult(temp[3], 9) ^ \
+                    galoisMult(temp[2], 13) ^ galoisMult(temp[1], 11)
+        column[1] = galoisMult(temp[1], 14) ^ galoisMult(temp[0], 9) ^ \
+                    galoisMult(temp[3], 13) ^ galoisMult(temp[2], 11)
+        column[2] = galoisMult(temp[2], 14) ^ galoisMult(temp[1], 9) ^ \
+                    galoisMult(temp[0], 13) ^ galoisMult(temp[3], 11)
+        column[3] = galoisMult(temp[3], 14) ^ galoisMult(temp[2], 9) ^ \
+                    galoisMult(temp[1], 13) ^ galoisMult(temp[0], 11)
+
+
+
+def mixColumns(s_matrix):
+
+    """ This function """
+
+    for i in range(4):
+        column = []
+
+        for j in range(4):
+            column.append(s_matrix[j*4+i])
+
+
+        mixColumn(column)
+
+        # transfer the new values back into the state table
+        for j in range(4):
+            s_matrix[j*4+i] = column[j]
+
+
+def mixColumnsInv(s_matrix):
+
+    """ This function  """
+
+    for i in range(4):
+        column = []
+
+        for j in range(4):
+            column.append(s_matrix[j*4+i])
+
+
+        mixColumnInv(column)
+
+
+        for j in range(4):
+            s_matrix[j*4+i] = column[j]
 
 mix = [
 [2,3,1,1],
@@ -165,6 +252,8 @@ sbox = [["63", "7c", "77", "7b", "f2", "6b", "6f", "c5", "30", "01", "67", "2b",
          ["70", "3e", "b5", "66", "48", "03", "f6", "0e", "61", "35", "57", "b9", "86", "c1", "1d", "9e"],
          ["e1", "f8", "98", "11", "69", "d9", "8e", "94", "9b", "1e", "87", "e9", "ce", "55", "28", "df"],
          ["8c", "a1", "89", "0d", "bf", "e6", "42", "68", "41", "99", "2d", "0f", "b0", "54", "bb", "16"]]
+
+
 
 rcon = ["01", "02", "04", "08", "10", "20", "40", "80", "1b", "36"]
 
