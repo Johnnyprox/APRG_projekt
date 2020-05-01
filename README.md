@@ -2,4 +2,4 @@
 
 1) Jan Prokop Ševčík (Ready)
 2) Filip Tesák (Ready)
-3) Martin Ptáček
+3) Martin Ptáček (Ready)
