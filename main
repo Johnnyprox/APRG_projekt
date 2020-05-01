@@ -45,7 +45,7 @@ def decryption():
     else:
         p = 56
     for n_m in range(n_o_m):
-        mix_c = enc.add_round_key(new_matrix[n_m], key[p:p + 4])
+        mix_c = enc.add_round_key(sec_matrix[n_m], key[p:p + 4])
         for round in range(nr - 1):
             sh_r = dec.inv_shift_rows(mix_c)
             su_b = dec.inv_sub_bytes(sh_r)
@@ -73,10 +73,12 @@ if choice == "a":
     new_matrix, n_o_m = enc.edit(message)
     key, nr = key.expand_k()
 elif choice == "b":
-    new_matrix, n_o_m = enc.edit(message)
+    sec_matrix, n_o_m = enc.edit(message)
     key, nr = key.expand_k()
 elif choice == "c":
-    new_matrix = encryption()
+    new_matrix, n_o_m = enc.edit(message)
+    sec_matrix = encryption()
     key, nr = key.expand_k()
 
 main()
+
